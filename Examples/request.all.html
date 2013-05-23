@@ -1,0 +1,79 @@
+<html>
+<head>
+	<title>Request.all example</title>
+</head>
+<body>
+
+	<ul id="responses">
+
+	</ul>
+
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/mootools/1.4.5/mootools-core-full-nocompat-yc.js"></script>
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/mootools-more/1.4.0.1/mootools-more-yui-compressed.js"></script>
+
+	<script type="text/javascript" src="../Source/request.add.js"></script>
+	<script type="text/javascript">
+		window.addEvent('load', function() {
+
+			console.log(Request)
+
+
+			Request.All(function(data, raw) {
+				if (data && data.success === 0) {
+					this.preventDefault();
+					$('responses').adopt(
+			        	new Element('li', {
+			        		'html' : '<b>an error occurred</b>'
+			        	})
+			        )
+				} else {
+					 $('responses').adopt(
+			        	new Element('li', {
+			        		'html' : '<b>success !</b>'
+			        	})
+			        )
+				}
+			})
+			
+
+			new Request.JSON({
+			    url: 'json.php',
+			    data: {
+			        json: JSON.encode({
+			            success: 1,
+			            content : "text"
+			        }),
+			        delay: 2
+			    },
+			    onSuccess: function(response) {
+			        $('responses').adopt(
+			        	new Element('li', {
+			        		'text' : response.content
+			        	})
+			        )
+			    }
+			}).send();
+
+			new Request.JSON({
+			    url: 'json.php',
+			    data: {
+			        json: JSON.encode({
+			            success: 0,
+			            content : ""
+			        }),
+			        delay: 2
+			    },
+			    onSuccess: function(response) {
+			        $('responses').adopt(
+			        	new Element('li', {
+			        		'text' : response.content
+			        	})
+			        )
+			    }
+			}).send();
+
+
+		})
+	</script>
+</body>
+</html>
